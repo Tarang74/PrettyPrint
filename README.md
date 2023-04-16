@@ -26,7 +26,7 @@ preceding the next node (if it exists).
 
 Below are example trees made up of nodes with labels: "A", "B2", "C33", "D444", etc.
 
-```ru
+```as
                                                  D444
                  ╭───────────────────────────────╯╰───────────────────────────────╮
                  B2                                                              F66666
@@ -40,7 +40,7 @@ Below are example trees made up of nodes with labels: "A", "B2", "C33", "D444", 
                                                                                    G777777
 ```
 
-```ru
+```as
 B2
   ╰───────╮
          I99999999
@@ -50,7 +50,7 @@ B2
    C33 G777777
 ```
 
-```ru
+```as
                E5555
        ╭───────╯╰───────╮
        C33             I99999999
@@ -62,7 +62,7 @@ B2
 
 Disabling the `overflow` option produces the following:
 
-```ru
+```as
                                                  D4
                  ╭───────────────────────────────╯╰───────────────────────────────╮
                  B2                                                              F6
@@ -76,7 +76,7 @@ Disabling the `overflow` option produces the following:
                                                                                    G7
 ```
 
-```ru
+```as
  B2
   ╰───────╮
          I9
@@ -86,7 +86,7 @@ Disabling the `overflow` option produces the following:
    C3  G7
 ```
 
-```ru
+```as
                E5
        ╭───────╯╰───────╮
        C3              I9
