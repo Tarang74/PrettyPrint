@@ -9,7 +9,7 @@ public static class MovieCollectionExtension
         R = 1
     };
 
-    public static void PrettyPrint(this IMovieCollection collection, bool overflow = true)
+    public static void PrettyPrint(this IMovieCollection collection, int nodeSpacing = 1, int nodeLabelWidth = 1, bool overflow = true)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -45,12 +45,7 @@ public static class MovieCollectionExtension
         int treeDepth = treeNodes.Count;
 
         int top = Console.GetCursorPosition().Top + 2 * treeDepth - 2;
-
-        // Modify at your own discretion
-        // Odd values do not work very well!
-        int gap = 2;
-        int margin = gap;
-        int labelWidth = 2;
+        int margin = nodeSpacing;
 
         string textToPrint = "";
 
@@ -76,7 +71,7 @@ public static class MovieCollectionExtension
             int parentGap;
 
             parentMargin = 2 * margin;
-            parentGap = 2 * gap + 2;
+            parentGap = 2 * nodeSpacing + nodeLabelWidth;
 
             int parentLeft = 0;
             bool parentLeftDefined = false;
@@ -85,21 +80,21 @@ public static class MovieCollectionExtension
             {
                 if (currentNode == nodesQueue.Peek())
                 {
-                    int left = calculateLeft(margin, (int)currentNode, gap, labelWidth);
+                    int left = calculateLeft(margin, (int)currentNode, nodeSpacing, nodeLabelWidth);
 
-                    if (row[0].text.Length > labelWidth)
+                    if (row[0].text.Length > nodeLabelWidth)
                     {
                         if (!overflow)
-                            labelText = InsertInto(labelText, row[0].text[..labelWidth], left);
+                            labelText = InsertInto(labelText, row[0].text[..nodeLabelWidth], left);
                         else
                             labelText = InsertInto(labelText, ' ' + row[0].text + new string(' ', 100), left - 1);
                     }
                     else
                     {
                         if ((nodesQueue.Peek() & 1) == 0)
-                            labelText = InsertInto(labelText, row[0].text + new string(' ', labelWidth - row[0].text.Length), left);
+                            labelText = InsertInto(labelText, row[0].text + new string(' ', nodeLabelWidth - row[0].text.Length), left);
                         else
-                            labelText = InsertInto(labelText, new string(' ', labelWidth - row[0].text.Length) + row[0].text, left);
+                            labelText = InsertInto(labelText, new string(' ', nodeLabelWidth - row[0].text.Length) + row[0].text, left);
                     }
 
                     if (depth > 0)
@@ -118,7 +113,7 @@ public static class MovieCollectionExtension
 
                         if (!parentLeftDefined)
                         {
-                            parentLeft = calculateLeft(parentMargin, (int)parentNodesQueue.Dequeue(), parentGap, labelWidth);
+                            parentLeft = calculateLeft(parentMargin, (int)parentNodesQueue.Dequeue(), parentGap, nodeLabelWidth);
                             parentLeftDefined = true;
                         }
 
@@ -128,19 +123,19 @@ public static class MovieCollectionExtension
                             edgeText = InsertInto(edgeText, "╭", left);
 
                             if (parentLeft - left < 1)
-                                edgeText = InsertInto(edgeText, "╯", left + 1);
+                                edgeText = InsertInto(edgeText, "╯", left + nodeLabelWidth - 2);
                             else
                                 edgeText = InsertInto(edgeText, new string('─', parentLeft - left - 1) + "╯", left + 1);
                         }
                         // If RChild
                         else
                         {
-                            edgeText = InsertInto(edgeText, "╮", left + 1);
+                            edgeText = InsertInto(edgeText, "╮", left + nodeLabelWidth - 1);
 
                             if (left - parentLeft < 1)
-                                edgeText = InsertIntoReverse(edgeText, "╰", left + 1);
+                                edgeText = InsertIntoReverse(edgeText, "╰", left + nodeLabelWidth - 1);
                             else
-                                edgeText = InsertIntoReverse(edgeText, new string('─', left - parentLeft - 1) + "╰", left + 1);
+                                edgeText = InsertIntoReverse(edgeText, new string('─', left - parentLeft - 1) + "╰", left + nodeLabelWidth - 1);
                         }
                     }
 
@@ -151,7 +146,7 @@ public static class MovieCollectionExtension
             }
 
             margin = parentMargin;
-            gap = parentGap;
+            nodeSpacing = parentGap;
 
             textToPrint += labelText + "\n" + edgeText + "\n";
         }
@@ -173,7 +168,7 @@ public static class MovieCollectionExtension
                 lines[i] = lines[i].TrimEnd();
 
         string pattern = @$"^( {{{minSpaces}}})";
-        Console.WriteLine(Regex.Replace(string.Join('\n', lines), pattern, " ", RegexOptions.Multiline));
+        Console.WriteLine(Regex.Replace(string.Join('\n', lines), pattern, "", RegexOptions.Multiline));
     }
 
     public static List<T> Join<T>(List<T> list1, List<T> list2)
