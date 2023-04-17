@@ -26,7 +26,7 @@ to allow some node labels to overflow any unoccupied whitespace to the right of 
 
 ## Examples
 
-Below are example trees made up of nodes with labels: "AAAA", "BBBB", "CCCC", "DDDD", etc.
+Below are example trees made up of nodes with labels: "AAA", "BBB", "CCC", "DDD", etc.
 
 1. `(1, 1, true)`
 
