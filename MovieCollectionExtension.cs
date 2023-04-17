@@ -49,7 +49,7 @@ public static class MovieCollectionExtension
 
         string textToPrint = "";
 
-        Func<int, int, int, int, int> calculateLeft = (int margin, int node, int gap, int labelWidth) => margin + node * (gap + labelWidth);
+        Func<int, int, int, int, int> calculateLeft = (int margin, int node, int spacing, int labelWidth) => margin + node * (spacing + labelWidth);
 
         // Second pass, generate text
         foreach ((int depth, List<(string text, uint directions)> row) in treeNodes.Reverse())
@@ -68,10 +68,10 @@ public static class MovieCollectionExtension
                 parentNodesQueue = new(treeNodes[depth - 1].Select(x => x.directions).ToList());
 
             int parentMargin;
-            int parentGap;
+            int parentSpacing;
 
             parentMargin = 2 * margin;
-            parentGap = 2 * nodeSpacing + nodeLabelWidth;
+            parentSpacing = 2 * nodeSpacing + nodeLabelWidth;
 
             int parentLeft = 0;
             bool parentLeftDefined = false;
@@ -113,7 +113,7 @@ public static class MovieCollectionExtension
 
                         if (!parentLeftDefined)
                         {
-                            parentLeft = calculateLeft(parentMargin, (int)parentNodesQueue.Dequeue(), parentGap, nodeLabelWidth);
+                            parentLeft = calculateLeft(parentMargin, (int)parentNodesQueue.Dequeue(), parentSpacing, nodeLabelWidth);
                             parentLeftDefined = true;
                         }
 
@@ -146,7 +146,7 @@ public static class MovieCollectionExtension
             }
 
             margin = parentMargin;
-            nodeSpacing = parentGap;
+            nodeSpacing = parentSpacing;
 
             textToPrint += labelText + "\n" + edgeText + "\n";
         }
