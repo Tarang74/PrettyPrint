@@ -9,7 +9,7 @@ public static class MovieCollectionExtension
         R = 1
     };
 
-    public static void PrettyPrint(this IMovieCollection collection, int nodeSpacing = 1, int nodeLabelWidth = 1, bool overflow = true)
+    public static string PrettyPrint(this IMovieCollection collection, int nodeSpacing = 1, int nodeLabelWidth = 1, bool overflow = false, bool optimise = true)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -19,8 +19,7 @@ public static class MovieCollectionExtension
 
         if (root == null)
         {
-            Console.WriteLine("Tree is empty.");
-            return;
+            return "Tree is empty";
         }
 
         Dictionary<int, List<(string text, uint directions)>> treeNodes = new();
@@ -44,7 +43,7 @@ public static class MovieCollectionExtension
 
         int treeDepth = treeNodes.Count;
 
-        int top = Console.GetCursorPosition().Top + 2 * treeDepth - 2;
+        int top = 2 * treeDepth - 2;
         int margin = nodeSpacing;
 
         string textToPrint = "";
@@ -150,10 +149,52 @@ public static class MovieCollectionExtension
 
             textToPrint += labelText + "\n" + edgeText + "\n";
         }
-        Print(textToPrint, overflow);
+
+        if (optimise)
+        {
+            string output = Print(textToPrint);
+            return OptimiseTree(output);
+        }
+        else
+            return Print(textToPrint);
     }
 
-    private static void Print(string text, bool trimEnd)
+    private static string OptimiseTree(string tree)
+    {
+        List<string> lines = tree.Split('\n').ToList();
+        List<string> outputLines = new(new string[lines.Count]);
+
+        List<char> columnList;
+
+        int lineLength = lines.Max(l => l.Length);
+
+        // pad all lines to equal length
+        for (int i = 0; i < lines.Count; i++)
+            if (lines[i].Length < lineLength)
+                lines[i] += new string(' ', lineLength - lines[i].Length + 1);
+
+        for (int columnNumber = 0; columnNumber < lineLength; columnNumber++)
+        {
+            bool addColumn = false;
+            foreach (string line in lines)
+                if (line[columnNumber] != ' ' && line[columnNumber] != '─')
+                {
+                    addColumn = true;
+                    break;
+                }
+
+            if (addColumn)
+            {
+                columnList = lines.Select(l => l[columnNumber]).ToList();
+                for (int j = 0; j < lines.Count; j++)
+                    outputLines[j] += columnList[j];
+            }
+        }
+
+        return string.Join("\n", outputLines);
+    }
+
+    private static string Print(string text)
     {
         List<string> lines = text.Split('\n').Reverse().ToList();
         lines.RemoveAll(s => string.IsNullOrEmpty(s));
@@ -163,20 +204,11 @@ public static class MovieCollectionExtension
             if (line.TakeWhile(c => c == ' ').Count() < minSpaces)
                 minSpaces = line.TakeWhile(c => c == ' ').Count();
 
-        if (trimEnd)
-            for (int i = 0; i < lines.Count; i++)
-                lines[i] = lines[i].TrimEnd();
+        for (int i = 0; i < lines.Count; i++)
+            lines[i] = lines[i].TrimEnd();
 
         string pattern = @$"^( {{{minSpaces}}})";
-        Console.WriteLine(Regex.Replace(string.Join('\n', lines), pattern, "", RegexOptions.Multiline));
-    }
-
-    public static List<T> Join<T>(List<T> list1, List<T> list2)
-    {
-        List<T> combinedList = new();
-        combinedList.AddRange(list1);
-        combinedList.AddRange(list2);
-        return combinedList;
+        return Regex.Replace(string.Join('\n', lines), pattern, "", RegexOptions.Multiline);
     }
 
     public static string InsertInto(string text, string newText, int index)
@@ -185,6 +217,7 @@ public static class MovieCollectionExtension
             text += new string(' ', index + newText.Length - text.Length + 1);
         return text[..index] + newText + text[(index + newText.Length)..];
     }
+
     public static string InsertIntoReverse(string text, string newText, int index)
     {
         index -= newText.Length;
