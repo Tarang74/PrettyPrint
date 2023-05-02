@@ -15,7 +15,8 @@ IMovieCollection collection = new();
 ...
 
 // Print tree
-collection.PrettyPrint(int nodeSpacing = 1, int nodeLabelWidth = 1, bool overflow = false);
+string tree = collection.PrettyPrint(int nodeSpacing = 1, int nodeLabelWidth = 1, bool overflow = false, bool optimise = true);
+Console.WriteLine(tree);
 ```
 
 The first two parameters `nodeSpacing` and `nodeLabelWidth` define dimensions for the deepest nodes in the tree.
@@ -23,6 +24,9 @@ Both arguments must be greater than 0.
 
 If you use a small `nodeLabelWidth`, you may want to enable the `overflow` flag
 to allow some node labels to overflow any unoccupied whitespace to the right of the node.
+
+The `optimise` parameter reduces the overall width of a tree. This is particularly
+useful when printing deep sparse trees that do not need to be spaced uniformally.
 
 ## Examples
 
