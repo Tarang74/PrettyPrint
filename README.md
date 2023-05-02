@@ -30,100 +30,90 @@ useful when printing deep sparse trees that do not need to be spaced uniformally
 
 ## Examples
 
-Below are example trees made up of nodes with labels: "AAA", "BBB", "CCC", "DDD", etc.
+Below are example trees made up of nodes with labels: "AAAA", "BBBB", "CCCC", "DDDD", etc.
 
-1. `(1, 1, true)`
+MWE:
+
+```cs
+IMovieCollection collection = new MovieCollection();
+
+collection.Insert(new Movie("BBBB"));
+collection.Insert(new Movie("IIII"));
+collection.Insert(new Movie("KKKK"));
+collection.Insert(new Movie("DDDD"));
+collection.Insert(new Movie("JJJJ"));
+collection.Insert(new Movie("CCCC"));
+collection.Insert(new Movie("AAAA"));
+collection.Insert(new Movie("GGGG"));
+collection.Insert(new Movie("FFFF"));
+collection.Insert(new Movie("HHHH"));
+collection.Insert(new Movie("EEEE"));
+
+// using default arguments (1, 1, false, true)
+string tree = collectionPrettyPrint();
+Console.WriteLine(tree);
+```
+
+```as
+ B
+╭╰──────╮
+A       I
+   ╭────╰─╮
+   D      K
+  ╭╰──╮  ╭╯
+  C   G  J
+     ╭╰╮
+     F H
+    ╭╯
+    E
+```
+
+Examples with various arguments:
+
+1. `(1, 1, true, false)`
 
    ```as
-                   BBB
+                   BBBB
    ╭───────────────╰───────────────╮
-   AAA                             III
+   AAAA                            IIII
                            ╭───────╰───────╮
-                           DDD             KKK
+                           DDDD            KKKK
                        ╭───╰───╮       ╭───╯
-                       CCC     GGG     JJJ
+                       CCCC    GGGG    JJJJ
                              ╭─╰─╮
-                             FFF HHH
+                             FFF HHHH
                             ╭╯
-                            EEE
+                            EEEE
    ```
 
-2. `(1, 1, false)`
+2. `(1, 2, false, true)`
 
    ```as
-                   B
-   ╭───────────────╰───────────────╮
-   A                               I
-                           ╭───────╰───────╮
-                           D               K
-                       ╭───╰───╮       ╭───╯
-                       C       G       J
-                             ╭─╰─╮
-                             F   H
-                            ╭╯
-                            E
+     BB
+   ╭─╯╰────────╮
+   AA         II
+         ╭────╯╰─────╮
+         DD         KK
+       ╭─╯╰────╮  ╭─╯
+       CC     GG  JJ
+            ╭─╯╰─╮
+            FF  HH
+           ╭╯
+           EE
    ```
 
-3. `(3, 1, true)`
+3. `(2, 1, false, false)`
 
    ```as
-                                                   BBB
-   ╭───────────────────────────────────────────────╰───────────────╮
-   AAA                                                             III
-                                           ╭───────────────────────╰───────╮
-                                           DDD                             KKK
-                               ╭───────────╰───╮               ╭───────────╯
-                               CCC             GGG             JJJ
-                                         ╭─────╰─╮
-                                         FFF     HHH
-                                      ╭──╯
-                                      EEE
-   ```
-
-4. `(3, 1, false)`
-
-   ```as
-                                                   B
-   ╭───────────────────────────────────────────────╰───────────────╮
-   A                                                               I
-                                           ╭───────────────────────╰───────╮
-                                           D                               K
-                               ╭───────────╰───╮               ╭───────────╯
-                               C               G               J
-                                         ╭─────╰─╮
-                                         F       H
-                                      ╭──╯
-                                      E
-   ```
-
-5. `(1, 3, true)`
-
-   ```as
-                   BBB
-   ╭───────────────╯ ╰───────────────────────────────────────────────╮
-   AAA                                                             III
-                                                           ╭───────╯ ╰───────────────────────╮
-                                                           DDD                             KKK
-                                                       ╭───╯ ╰───────────╮             ╭───╯
-                                                       CCC             GGG             JJJ
-                                                                     ╭─╯ ╰─────╮
-                                                                     FFF     HHH
-                                                                    ╭╯
-                                                                    EEE
-   ```
-
-6. `(1, 3, false)`
-
-   ```as
-                   BBB
-   ╭───────────────╯ ╰───────────────────────────────────────────────╮
-   AAA                                                             III
-                                                           ╭───────╯ ╰───────────────────────╮
-                                                           DDD                             KKK
-                                                       ╭───╯ ╰───────────╮             ╭───╯
-                                                       CCC             GGG             JJJ
-                                                                     ╭─╯ ╰─────╮
-                                                                     FFF     HHH
-                                                                    ╭╯
-                                                                    EEE
+                                   B
+   ╭───────────────────────────────╰───────────────╮
+   A                                               I
+                                   ╭───────────────╰───────╮
+                                   D                       K
+                           ╭───────╰───╮           ╭───────╯
+                           C           G           J
+                                   ╭───╰─╮
+                                   F     H
+                                 ╭─╯
+                                 E
    ```
